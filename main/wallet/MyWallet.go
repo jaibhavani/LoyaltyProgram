@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
-	"github.com/jaibhavani/LoyaltyProgram/LoyaltyPkgUtil"
+	"github.com/jaibhavani/LoyaltyProgram"
 )
 
 // SimpleChaincode example simple Chaincode implementation
