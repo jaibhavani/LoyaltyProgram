@@ -153,11 +153,40 @@ func (t *SampleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 	return nil, nil
 }
 
+// This chain code will be invoked by Airline application code to get the point allocation transaction
+// arg[0] is the UserwalletName
+// arg[1] is the Entity Name
+// arg[2] is the TransactionsID
+
+func GetAirlinePointTransactionByUser(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+
+	logger.Debug("Entering Get Loyalty wallet ")
+	if len(args) < 3 {
+		return nil, errors.New("Incorrect number of arguments. Expecting  3")
+	}
+
+	var name = args[0]
+	var entity = args[1]
+	var transaction = args[2]
+
+	bytes, err := stub.GetState(name+entity+transaction)
+
+	if err != nil {
+		return nil, errors.New("Error while getting Airline point transaction data for user " + name)
+	}
+	return bytes, nil
+
+}
 
 // Query
 func (t *SampleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
+	if function == "read" {
+		return GetAirlinePointTransactionByUser(stub, args)
+	}
+	fmt.Println(" Invalid function passed to Query function " + function)
 
-	return nil, nil
+	return nil, errors.New(" Invalid function passed to Query function " + function)
+	
 }
 
 // main
