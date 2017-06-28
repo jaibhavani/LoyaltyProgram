@@ -156,6 +156,7 @@ func (t *SampleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 	fmt.Println("invoke is running " + function)
 
 	if function == "addPoints" {
+		fmt.Println(" Calling addPoints function from Invoke ")
 		return addPoints(stub, args)
 	} 
 
