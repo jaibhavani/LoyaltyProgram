@@ -160,7 +160,7 @@ func AddPointsToWallet(stub shim.ChaincodeStubInterface, args []string) ([]byte,
 
 	logger.Debug("Added points to wallet success fully ")
 
-	return nil, nil
+	return userWalletByte, nil
 
 }
 // Redeem Points from user wallet. This function will be invoked by the MyWallet program

@@ -41,7 +41,8 @@ func addPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) 
 		return nil, errors.New("Incorrect number of arguments. Expecting 5 walletid,entity name, transactionid, reward and points")
 	}
 
-	_, err := AddPointsToWallet(stub, args)
+	fmt.Println(" Calling AddPoints ")
+	userWalletByte, err := AddPointsToWallet(stub, args)
 
 	if err != nil {
 
@@ -49,9 +50,9 @@ func addPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) 
 		return nil, errors.New("Errors while Adding points to wallet for user  " + args[0])
 	}
 
-	logger.Info("Successfully Added points to user wallet " + args[0])
+	fmt.Println("Successfully Added points to user wallet " + args[0])
 
-	return nil, nil
+	return userWalletByte, nil
 }
 
 
@@ -63,10 +64,12 @@ func AddPointsToWallet(stub shim.ChaincodeStubInterface, args []string) ([]byte,
 	}
 
 	var name = args[0]
+	fmt.Println("Get the wallet for user " + name)
 
 	wallet, err := stub.GetState(name)
 
 	if err != nil {
+		fmt.Println("No wallet data found for user " + name)
 		return nil, errors.New("Error while getting wallet data for user " + name)
 	}
 	// Check if user has wallet record in the ledger. If not, then create the wallet
@@ -88,19 +91,22 @@ func AddPointsToWallet(stub shim.ChaincodeStubInterface, args []string) ([]byte,
 	rewardTran.TransactionType = args[3]
 	rewardTran.LoyaltyPoints = points
 
+	fmt.Println(" marshalling reward transaction to bytes " )
+
 	rewardTranBytes, err := json.Marshal(rewardTran)
 	if err != nil {
 		fmt.Println(err)
 		return nil, errors.New("Errors while creating json string for reward transaction")
 	}
 
+	fmt.Println(" Storing the reward tran to state with ID " + args[0]+args[1]+args[2])
 	err = stub.PutState(args[0]+args[1]+args[2], rewardTranBytes)
 
 	if err != nil {
 		return nil, err
 	}
 
-	logger.Debug("addd reward transaction to the ledger ")
+	fmt.Println("addd reward transaction to the ledger ")
 
 	var userWallet LoyaltyPointWallet
 	err = json.Unmarshal(wallet, &userWallet)
@@ -116,6 +122,9 @@ func AddPointsToWallet(stub shim.ChaincodeStubInterface, args []string) ([]byte,
 	if err != nil {
 		return nil, errors.New("Points awarded from entity " + args[1] + "  must be integer")
 	}
+
+	fmt.Println(" Currnent Wallet balance " +  strconv.Itoa(userWallet.PointBalance) + " additional reward point   " + strconv.Itoa(awardPoints))
+
 	userWallet.PointBalance = userWallet.PointBalance + awardPoints
 
 	userWalletByte, err := json.Marshal(userWallet)
@@ -125,14 +134,14 @@ func AddPointsToWallet(stub shim.ChaincodeStubInterface, args []string) ([]byte,
 		return nil, errors.New("Errors while creating json string after updating points for user " + name)
 	}
 
-	err = stub.PutState(userWallet.Name, userWalletByte)
+	err = stub.PutState(name, userWalletByte)
 	if err != nil {
 		return nil, err
 	}
 
-	logger.Debug("Added points to wallet success fully ")
+	fmt.Println("Added points to wallet success fully ")
 
-	return nil, nil
+	return userWalletByte, nil
 
 }
 
