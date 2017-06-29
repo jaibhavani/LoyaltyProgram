@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"encoding/json"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
+	"github.com/jaibhavani/LoyaltyProgram/LoyaltyPkgUtil"
+	
 		
 )
 type LoyaltyPointWallet struct {
@@ -42,7 +44,7 @@ func addPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) 
 	}
 
 	fmt.Println(" Calling AddPoints ")
-	userWalletByte, err := AddPointsToWallet(stub, args)
+	userWalletByte, err := LoyaltyPkgUtil.AddPointsToWallet(stub, args)
 
 	if err != nil {
 

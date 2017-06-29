@@ -1,4 +1,4 @@
-package LoyaltyPkg
+package LoyaltyPkgUtil
 
 import (
 	"encoding/json"
