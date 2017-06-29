@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
-
+	
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/jaibhavani/LoyaltyProgram/LoyaltyPkgUtil"
 )
@@ -88,6 +88,34 @@ func createWallet(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 	return nil, nil
 }
 
+// This chain code will be invoked by Entity application code to add points to user wallet
+// arg[0] is the Name
+// arg[1] is the Entity Name
+// arg[2] is the TransactionsID
+// arg[3] transaction type - reward
+// arg[4] is the LoyaltyPoints
+
+func addPointsToWallet(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+
+	if len(args) != 2 {
+		return nil, errors.New("Incorrect number of arguments. Expecting 3 name, password, points")
+	}
+
+	userWalletByte, err := LoyaltyPkg.AddPointsToWallet(stub, args)
+
+	if err != nil {
+
+		fmt.Println("Errors while creating  wallet for user  " + args[0])
+		fmt.Println(err)
+		return nil, errors.New("Errors while creating  wallet for user  " + args[0])
+	}
+
+	fmt.Println("Successfully created wallet for user  " + args[0])
+
+	return userWalletByte, nil
+}
+
+
 // Invoke
 func (t *SampleChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	fmt.Println("invoke is running " + function)
@@ -96,6 +124,8 @@ func (t *SampleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		return redeem(stub, args)
 	} else if function == "createwallet" {
 		return createWallet(stub, args)
+	} else if function == "addpointstowallet" {
+		return addPointsToWallet(stub, args)
 	} 
 
 	return nil, nil
@@ -105,6 +135,8 @@ func (t *SampleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 func (t *SampleChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	if function == "read" {
 		return LoyaltyPkg.GetUserLoyaltyWallet(stub, args)
+	} else if function == "getuserentitytransaction" {
+		return LoyaltyPkg.GetUserEntityPointsInWallet(stub, args)
 	}
 
 	fmt.Println(" Invalid function passed to Query function " + function)
