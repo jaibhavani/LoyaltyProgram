@@ -102,7 +102,7 @@ func addPointsToWallet(stub shim.ChaincodeStubInterface, args []string) ([]byte,
 	logger.Info(" length of arguments " + strconv.Itoa(len(args)))
 
 	if len(args) != 5 {
-		fmt.Println(" Incorrect number of arguments sent to redeem. Expecting 5. Received "  + strconv.Itoa(len(args)))
+		fmt.Println(" Incorrect number of arguments sent to addPointsToWallet. Expecting 5. Received "  + strconv.Itoa(len(args)))
 		return nil, errors.New("Incorrect number of arguments. Expecting 3 name, password, points")
 	}
 

@@ -46,7 +46,7 @@ func addPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) 
 	var chainCodeToCall = args[5]
 	f := "addpointstowallet"
 	
-	invokeArgs := util.ToChaincodeArgs(f,"addpointstowallet", args[0], args[1], args[2], args[3], args[4])
+	invokeArgs := util.ToChaincodeArgs(f, args[0], args[1], args[2], args[3], args[4])
 	userWalletByte, err := stub.InvokeChaincode(chainCodeToCall, invokeArgs)
 	if err != nil {
 		errStr := fmt.Sprintf("Failed to invoke chaincode. Got error: %s", err.Error())
