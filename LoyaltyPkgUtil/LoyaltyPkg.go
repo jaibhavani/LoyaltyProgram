@@ -169,15 +169,14 @@ func AddPointsToWallet(stub shim.ChaincodeStubInterface, args []string) ([]byte,
 
 	// Add the new points to the wallet balance
 
-	awardPoints, err := strconv.Atoi(args[3])
+	//awardPoints=points
+	//if err != nil {
+	//	return nil, errors.New("Points awarded from entity " + args[1] + "  must be integer")
+	//}
 
-	if err != nil {
-		return nil, errors.New("Points awarded from entity " + args[1] + "  must be integer")
-	}
+	fmt.Println(" Currnent Wallet balance " +  strconv.Itoa(userWallet.PointBalance) + " additional reward point   " + strconv.Itoa(points))
 
-	fmt.Println(" Currnent Wallet balance " +  strconv.Itoa(userWallet.PointBalance) + " additional reward point   " + strconv.Itoa(awardPoints))
-
-	userWallet.PointBalance = userWallet.PointBalance + awardPoints
+	userWallet.PointBalance = userWallet.PointBalance + points
 
 	userWalletByte, err := json.Marshal(userWallet)
 
