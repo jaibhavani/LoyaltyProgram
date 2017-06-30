@@ -96,7 +96,7 @@ func getAirlinePointTransactionByUser(stub shim.ChaincodeStubInterface, args []s
 	var chainCodeToCall = args[3]
 	f := "query"
 	
-	invokeArgs := util.ToChaincodeArgs(f, args[0], args[1], args[2], args[3])
+	invokeArgs := util.ToChaincodeArgs(f, args[0], args[1], args[2])
 	userAirlineWalletTranByte, err := stub.InvokeChaincode(chainCodeToCall, invokeArgs)
 	if err != nil {
 		errStr := fmt.Sprintf("Failed to invoke chaincode. Got error: %s", err.Error())

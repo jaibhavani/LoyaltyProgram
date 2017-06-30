@@ -60,8 +60,8 @@ func GetUserEntityPointsInWallet(stub shim.ChaincodeStubInterface, args []string
 	bytes, err := stub.GetState(args[0]+args[1]+ args[2])
 
 	if err != nil {
-		fmt.Println(" Error while getting the data for user " + args[0] + " and Entity " + args[1])
-		return nil, errors.New("Error while getting wallet data for user " + name)
+		fmt.Println(" Error while getting the data for user " + name + " and Entity " + args[1])
+		return nil, errors.New("Error while getting entity transaction wallet data for user " + name)
 	}
 	return bytes, nil
 
