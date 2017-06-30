@@ -44,7 +44,7 @@ func addPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) 
 
 	fmt.Println(" Calling AddPoints  ")
 	var chainCodeToCall = args[5]
-	f := "invoke"
+	f := "addpointstowallet"
 	
 	invokeArgs := util.ToChaincodeArgs(f,"addpointstowallet", args[0], args[1], args[2], args[3], args[4])
 	userWalletByte, err := stub.InvokeChaincode(chainCodeToCall, invokeArgs)
