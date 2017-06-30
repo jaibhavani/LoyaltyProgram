@@ -109,6 +109,8 @@ func CreateWallet(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 // arg[4] loyalty points - total loyalty points awarded by the entity for the transaction
 func AddPointsToWallet(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	logger.Debug("Entering add points to Loyalty wallet ")
+	
+	fmt.Println("Entering add points to Loyalty wallet ")
 
 	if len(args) !=5 {
 		return nil, errors.New("Incorrect number of arguments. Expecting  name, entity, transactionid, transactiontype, points")
@@ -158,7 +160,7 @@ func AddPointsToWallet(stub shim.ChaincodeStubInterface, args []string) ([]byte,
 		return nil, err
 	}
 
-	fmt.Println("addd reward transaction to the ledger ")
+	fmt.Println("addd reward transaction to the ledger. Now adding points  ")
 
 	var userWallet LoyaltyPointWallet
 	err = json.Unmarshal(wallet, &userWallet)
@@ -167,12 +169,7 @@ func AddPointsToWallet(stub shim.ChaincodeStubInterface, args []string) ([]byte,
 		return nil, errors.New("Failed to marshal string to struct of user " + name)
 	}
 
-	// Add the new points to the wallet balance
-
-	//awardPoints=points
-	//if err != nil {
-	//	return nil, errors.New("Points awarded from entity " + args[1] + "  must be integer")
-	//}
+	fmt.Println("*** SDS--- Now adding points ***********")
 
 	fmt.Println(" Currnent Wallet balance " +  strconv.Itoa(userWallet.PointBalance) + " additional reward point   " + strconv.Itoa(points))
 
@@ -258,12 +255,7 @@ func RedeemPoints(stub shim.ChaincodeStubInterface, args []string)([]byte, error
 
 	// Add the new points to the wallet balance
 
-	awardPoints, err := strconv.Atoi(args[3])
-
-	if err != nil {
-		return nil, errors.New("Points awarded from entity " + args[1] + "  must be integer")
-	}
-	userWallet.PointBalance = userWallet.PointBalance - awardPoints
+	userWallet.PointBalance = userWallet.PointBalance - points
 
 	userWalletByte, err := json.Marshal(userWallet)
 
