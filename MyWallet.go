@@ -46,6 +46,7 @@ func (t *SampleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 func redeem (stub shim.ChaincodeStubInterface, args []string) ([]byte,error){
 
 	if len(args) != 5 {
+			fmt.Println(" Incorrect number of arguments sent to redeem. Expecting 5. Received "  + strconv.Itoa(len(args)))
 			return nil, errors.New("Incorrect number of arguments. Expecting 5")
 		}
 
@@ -97,10 +98,15 @@ func createWallet(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 
 func addPointsToWallet(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
-	if len(args) != 2 {
+	fmt.Println("inside addPointstoWallet for user  " + args[0])
+	logger.Info(" length of arguments " + strconv.Itoa(len(args)))
+
+	if len(args) != 5 {
+		fmt.Println(" Incorrect number of arguments sent to redeem. Expecting 5. Received "  + strconv.Itoa(len(args)))
 		return nil, errors.New("Incorrect number of arguments. Expecting 3 name, password, points")
 	}
 
+	fmt.Println(" Calling LoyaltyPkg.AddPointsToWallet  ")
 	userWalletByte, err := LoyaltyPkg.AddPointsToWallet(stub, args)
 
 	if err != nil {
@@ -110,7 +116,7 @@ func addPointsToWallet(stub shim.ChaincodeStubInterface, args []string) ([]byte,
 		return nil, errors.New("Errors while creating  wallet for user  " + args[0])
 	}
 
-	fmt.Println("Successfully created wallet for user  " + args[0])
+	fmt.Println("Successfully added points to wallet for user  " + args[0])
 
 	return userWalletByte, nil
 }
@@ -118,13 +124,14 @@ func addPointsToWallet(stub shim.ChaincodeStubInterface, args []string) ([]byte,
 
 // Invoke
 func (t *SampleChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	fmt.Println("invoke is running " + function)
+	fmt.Println("MyWallet invoke is running " + function)
 
 	if function == "redeem" {
 		return redeem(stub, args)
 	} else if function == "createwallet" {
 		return createWallet(stub, args)
 	} else if function == "addpointstowallet" {
+		fmt.Println(" Inside MyWallet Invoke routine: Calling  addpointstowallet ")
 		return addPointsToWallet(stub, args)
 	} 
 
